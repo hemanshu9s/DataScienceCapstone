@@ -1,0 +1,42 @@
+---
+title: "test"
+author: "Shobhit Tiwari"
+date: "January 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+  library(quanteda)
+  require(readtext)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r cars}
+
+  conn <- file("Coursera-SwiftKey/final/en_US/mergedfile.txt", "r")
+  fulltext <- readLines(conn)
+  nlines <- length(fulltext)
+  close(conn)
+  
+  conn <- file("Coursera-SwiftKey/final/en_US/sampledfile.txt", "w")
+  selection <- rbinom(nlines, 1, .2)
+  for (i in 1:nlines) {
+    if (selection[i]==1) { cat(fulltext[i], file=conn, sep="\n") }
+  }
+  close(conn)
+  
+  paste("Saved", sum(selection), "lines to file", "Coursera-SwiftKey/final/en_US/sampledfile.txt")
+  fulltext <- NULL
+  
+  
+
+  mytf3 <- readLines("Coursera-SwiftKey/final/en_US/sampledfile.txt")
+  myCorpus <- corpus(mytf3)
+  mytf3<- NULL
+
+  triGrams <- tokens(myCorpus,what= "word", remove_numbers = TRUE, ngrams = 1:2)
+  
+  
+```
