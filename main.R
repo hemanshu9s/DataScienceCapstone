@@ -27,7 +27,7 @@ makeSentences <- function(filecorpus){
 }
 
 makeNgrams <- function(sentences, n = 1L){
-  words <- tokens(sentences, ngrams = n, remove_separators = TRUE,remove_punct = TRUE, remove_twitter = TRUE, what = "word", remove_hyphens = TRUE, remove_numbers = TRUE)
+  words <- tokens(sentences, ngrams = n,remove_url = TRUE, remove_separators = TRUE,remove_punct = TRUE, remove_twitter = TRUE, what = "word", remove_hyphens = TRUE, remove_numbers = TRUE)
   words <-  tokens_remove(words, getProfanities())
 }
 
@@ -44,6 +44,13 @@ createnGramLookupTable <- function(ngram){
  tokenList <-  unlist(ngram, recursive = FALSE, use.names = FALSE)
  wordFreq <- table(tokenList)
  nGramTable <- as.data.frame(wordFreq)
+ colnames(nGramTable) <- c("nGrams","Frequency")
+ nGramTable$nGrams <- as.character(nGramTable$nGrams)
+ nGramTable$nGrams <- gsub("^_*|_*$","", nGramTable$nGrams)
+ nGramTable$nGrams <- gsub("_+","_", nGramTable$nGrams)
+ nGramTable <- mutate(nGramTable,Pred = sapply(strsplit(nGramTable$nGrams, split='_', fixed=TRUE),function(x)(tail(unlist(x),1))))
+ nGramTable <- mutate(nGramTable,nGrams =sapply(strsplit(nGramTable$nGrams, '_', fixed = TRUE),function(x) (paste(head(unlist(x), -1),collapse = "_"))))
+ nGramTable
 }
 
 
@@ -51,13 +58,10 @@ main <- function(){
   library(quanteda)
   require(readtext)
   library(sqldf)
+  library(dplyr)
   mergeFiles()
   fileCorpus <- makeCorpus()
   sentences <- makeSentences(fileCorpus)
-  oneGrams <- makeNgrams(sentences, 1)
-  oneGramTable <- createnGramLookupTable(oneGrams)
-  write.table(oneGramTable, "oneGramTable.dat", sep = ",", quote = FALSE)
-  oneGrams<- NULL
   twoGrams <- makeNgrams(sentences, 2)
   twoGramTable <- createnGramLookupTable(twoGrams)
   write.table(twoGramTable, "twoGramTable.dat", sep = ",", quote = FALSE)
@@ -70,4 +74,8 @@ main <- function(){
   fourGramTable <- createnGramLookupTable(fourGrams)
   write.table(fourGramTable, "fourGramTable.dat", sep = ",", quote = FALSE)
   fourGrams <- NULL
+  fiveGrams <- makeNgrams(sentences, 5)
+  fiveGramTable <- createnGramLookupTable(fiveGrams)
+  write.table(fiveGramTable, "fiveGramTable.dat", sep = ",", quote = FALSE)
+  fiveGrams <- NULL
 }
