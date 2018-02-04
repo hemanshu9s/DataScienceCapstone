@@ -11,3 +11,6 @@ File Details :
 1. main.R -> Code for sampling data and generating nGram dictionaries. 
 2. report.rmd -> Milestone report for data exploration 
 
+The shiny app is deployed at https://machinemonk.shinyapps.io/nextwordpredictor/. 
+
+Give it a go !!
