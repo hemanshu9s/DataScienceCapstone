@@ -135,8 +135,7 @@ plotMostFrequentwords <- function(nGrams, title){
   wordFreq <- table(nGramList)
   mostfreqTwoGrams <- as.data.frame(sort(wordFreq,decreasing=TRUE)[1:10])
   ggplot(mostfreqTwoGrams, aes(x= nGramList,y = Freq)) +geom_bar(stat = "identity") +
-    theme(axis.text.x = element_text(angle = 90, hjust = 0))
-  + ggtitle(title)
+    theme(axis.text.x = element_text(angle = 90, hjust = 0))  + ggtitle(title)
 }
 
 
@@ -177,4 +176,6 @@ Most frequent bigrams, trigrams and four gram words:
   
 ```
 
+## Next steps
 
+Now we will create nGram model for predicting next words and deploy it in a shiny app.
