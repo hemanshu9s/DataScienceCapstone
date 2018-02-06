@@ -1,7 +1,7 @@
 mergeFiles <- function() {
-  if (!file.exists("Coursera-SwiftKey/final/en_US/mergedfile.txt")) {
+  # if (!file.exists("Coursera-SwiftKey/final/en_US/mergedfile.txt")) {
     conn <- file("Coursera-SwiftKey/final/en_US/mergedfile.txt", "r")
-    fulltext <- readLines(conn, encoding = "UTF-8")
+    fulltext <- readLines(conn, encoding = "UTF-8", skipNul = TRUE)
     nlines <- length(fulltext)
     close(conn)
     
@@ -19,13 +19,13 @@ mergeFiles <- function() {
       "lines to file",
       "Coursera-SwiftKey/final/en_US/sampledfile.txt"
     )
-  }
+  # }
 }
 
 makeCorpus <- function() {
   mytf3 <-
     readLines("Coursera-SwiftKey/final/en_US/sampledfile.txt",
-              encoding = "UTF-8")
+              encoding = "UTF-8", skipNul = TRUE)
   myCorpus <- corpus(mytf3)
 }
 
@@ -40,8 +40,6 @@ makeSentences <- function(filecorpus) {
   sentences <-  tokens_remove(sentences, getProfanities())
   unlist(lapply(sentences, function(a)
      char_tolower(a)))
-  # unlist(lapply(sentences, function(a)
-  #   paste('S', char_tolower(a), 'E')))
 }
 
 makeNgrams <- function(sentences, n = 1L) {

@@ -11,17 +11,18 @@ library(shiny)
 require(stringr)
 library(sqldf)
 
-twoGrams <- read.csv('../twoGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
-threeGrams <- read.csv('../threeGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
-fourGrams <- read.csv('../fourGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
-fiveGrams <- read.csv('../fiveGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
+twoGrams <- read.csv('twoGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
+threeGrams <- read.csv('threeGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
+fourGrams <- read.csv('fourGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
+fiveGrams <- read.csv('fiveGramTable.csv', header = TRUE, stringsAsFactors = FALSE)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   output$inputText <- renderText({ input$txt }, quoted = FALSE)
   observeEvent(input$Submit, {
-    nwords <- str_count(input$txt, "\\S+")
-    formattedTxt <- paste(unlist(strsplit(isolate(input$txt),' ')), collapse = '_')
+    txt <- gsub("\'","\'\'",input$txt)
+    nwords <- str_count(txt, "\\S+")
+    formattedTxt <- paste(unlist(strsplit(isolate(txt),' ')), collapse = '_')
     output$suggestions  <- renderPrint({
       if(nwords >= 5){
       print(getPreds(formattedTxt, 5))
