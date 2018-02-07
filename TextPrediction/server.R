@@ -29,7 +29,7 @@ shinyServer(function(input, output) {
       }
       else{
         
-        print(getPreds(formattedTxt, nwords))
+        print(getPreds(formattedTxt, nwords + 1))
       }
       })
   })
